@@ -1,4 +1,4 @@
-import Controladores.MenuPrincipal;
+import Menus.MenuPrincipal;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package Controladores;
+package Menus;
 
 public class MenuEmpleados {
 }

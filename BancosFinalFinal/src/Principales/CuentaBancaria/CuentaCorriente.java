@@ -2,7 +2,7 @@ package Principales.CuentaBancaria;
 
 import Auxiliares.Enums.Estado;
 import Auxiliares.Enums.TipoCuenta;
-import Controladores.MenuCuentas;
+import Menus.MenuCuentas;
 import Principales.Bancos;
 import Principales.Historial;
 import Principales.TipoTarjetas.Tarjeta;
@@ -14,6 +14,8 @@ public class CuentaCorriente extends CuentaBancaria {
         super(numeroCuenta, claveInterbancaria, estado, TipoCuenta.Corriente, historial, tarjetas, bancos, saldo, clave,  intentos);
     }
 
+
+    @Override
     public void mostrarMenu() {
         MenuCuentas Debito = new MenuCuentas();
         Debito.menuDebito();

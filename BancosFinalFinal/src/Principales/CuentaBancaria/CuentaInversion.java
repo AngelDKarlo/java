@@ -2,13 +2,11 @@ package Principales.CuentaBancaria;
 
 import Auxiliares.Enums.Estado;
 import Auxiliares.Enums.TipoCuenta;
-import Auxiliares.Enums.TipoInversion;
-import Controladores.MenuCuentas;
+import Menus.MenuCuentas;
 import Hilos.HiloInversion;
 import Principales.Bancos;
 import Principales.Historial;
 import Principales.Inversion;
-import Principales.TipoTarjetas.Tarjeta;
 
 import java.util.ArrayList;
 
@@ -16,14 +14,15 @@ public class CuentaInversion extends CuentaBancaria {
     private ArrayList<Inversion> InversionesActuales;
     private HiloInversion hiloInversion;
 
-    public CuentaInversion(String numeroCuenta, String claveInterbancaria, Estado Estado,  ArrayList<Historial> historial, ArrayList<Tarjeta> tarjetas, Bancos bancos, double saldo, String CLAVE, int intentos, ArrayList<Inversion> InversionesActuales) {
-        super(numeroCuenta, claveInterbancaria, Estado, TipoCuenta.Inversion,  historial, tarjetas, bancos, saldo, CLAVE, intentos);
+    public CuentaInversion(String numeroCuenta, String claveInterbancaria, Estado Estado,  ArrayList<Historial> historial, Bancos bancos, double saldo, String CLAVE, int intentos, ArrayList<Inversion> InversionesActuales) {
+        super(numeroCuenta, claveInterbancaria, Estado, TipoCuenta.Inversion,  historial,null, bancos, saldo, CLAVE, intentos);
         this.InversionesActuales = InversionesActuales;
 
         hiloInversion = new HiloInversion(InversionesActuales);
         hiloInversion.start();
     }
 
+    @Override
     public void mostrarMenu() {
         MenuCuentas Inversion = new MenuCuentas();
         Inversion.menuInversion();

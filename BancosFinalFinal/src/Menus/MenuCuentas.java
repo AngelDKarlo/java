@@ -1,8 +1,9 @@
-package Controladores;
+package Menus;
 
 import Auxiliares.Validaciones;
 import Gestores.GestorInverciones;
 import Gestores.GestorTransacciones;
+import Principales.CuentaBancaria.CuentaEmpresa;
 
 import java.util.Scanner;
 
@@ -118,6 +119,47 @@ public class MenuCuentas  {
     }
 
     public void menuEmpresas(){
-
+        ciclo:
+        do {
+            System.out.println("**************************************");
+            if(cuentaActual instanceof CuentaEmpresa cuentaEmpresa){
+            }
+            System.out.println("Numero de Cuenta: " + cuentaActual.getNumeroCuenta());
+            System.out.println("Saldo: " + cuentaActual.getSaldo());
+            System.out.println("Que deseas hacer?");
+            System.out.println("1- Depositar");
+            System.out.println("2- Retirar");
+            System.out.println("3- Transferencia"); 
+            System.out.println("4- Pagar a empleados");
+            System.out.println("5- Ver Historial");
+            System.out.println("6- Salir");
+            System.out.println("**************************************");
+            opcion = sc.nextLine();
+            op = Validaciones.validarTipoDatoInt(opcion);
+            switch (op) {
+                case 1:
+                    GestorTransacciones.depositar();
+                    break;
+                case 2:
+                    GestorTransacciones.retirar();
+                    break;
+                case 3:
+                    GestorTransacciones.transferencia();
+                    break;
+                case 4:
+                    GestorTransacciones.pedirCredito();
+                    break;
+                case 5:
+                    System.out.println(cuentaActual.getHistorial());
+                    break;
+                case 6:
+                    break ciclo;
+                case 0:
+                    System.out.println("No se aceptan caracteres");
+                default:
+                    System.out.println("Opcion no disponible");
+                    break;
+            }
+        }while (true);
     }
 }

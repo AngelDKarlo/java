@@ -51,15 +51,15 @@ public class GestorInverciones {
             switch(op){
                 case 1:
                     Intereses = 0.02;
-                    icr = 0.16;
+                    icr = 1.2;
                     break ciclo;
                 case 2:
-                    Intereses = 0.04;
-                    icr = 0.16;
+                    Intereses = 0.4;
+                    icr = 1.2;
                     break ciclo;
                 case 3:
                     Intereses = 0.08;
-                    icr = 0.16;
+                    icr = 1.2;
                     break ciclo;
                 default:
                     System.out.println("Opcion no valida");
@@ -147,7 +147,7 @@ public class GestorInverciones {
             ArrayList<Inversion> inversiones = cuentaInversion.getInversionesActuales();
             for (int  i = 0; i < inversiones.size(); i++) {
                 Inversion Inv = inversiones.get(i);
-                System.out.println((i+1) + ". Monto: " +  Inv.getMonto() + " Plazo: " + Inv.getPlazos() + " Meses");
+                System.out.println((i+1) + ". Monto: " +  Inv.getMonto() + " Plazo: " + Inv.getPlazos() + " Meses " + "Estado: " + Inv.getEstadoInversion());
             }
         }
     }

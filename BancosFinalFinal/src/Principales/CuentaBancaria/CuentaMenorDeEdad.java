@@ -1,5 +1,4 @@
 package Principales.CuentaBancaria;
 
-public class CuentaNomina {
-
+public class CuentaMenorDeEdad {
 }

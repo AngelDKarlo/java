@@ -1,4 +1,4 @@
-package Controladores;
+package Menus;
 
 import Auxiliares.Validaciones;
 
@@ -18,6 +18,12 @@ public class MenuPrincipal {
         cuentaMalibran.add(cuentaInversion);
         Malibran.setCuenta(cuentaMalibran);
         clientes.add(Malibran);
+
+        tarjetas2.add(TDebitoEmpresa);
+        cuentaNomina.setTarjetas(tarjetas2);
+        cuentajesus.add(cuentaNomina);
+        Jesus.setCuenta(cuentajesus);
+        clientesEmpresa.add(Jesus);
 
         Scanner sc = new Scanner(System.in);
         String opcion;

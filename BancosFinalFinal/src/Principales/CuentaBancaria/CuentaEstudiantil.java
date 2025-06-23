@@ -1,4 +1,4 @@
 package Principales.CuentaBancaria;
 
-public class CuentaMoral {
+public class CuentaEstudiantil {
 }
