@@ -36,6 +36,7 @@ public class ConstruccionDeCuentas {
     public static ArrayList<Clientes> clientes = new ArrayList<>();
     public static ArrayList<Tarjeta> tarjetas = new ArrayList<>();
     public static ArrayList<Tarjeta> tarjetas2 = new ArrayList<>();
+    public static ArrayList<Tarjeta> tarjetas3 = new ArrayList<>();
     public static ArrayList<Empleados> empleados = new ArrayList<>();
     public static ArrayList<ClienteMoral> empresas = new ArrayList<>();
 
@@ -48,6 +49,8 @@ public class ConstruccionDeCuentas {
     public static Clientes Jesus = new Clientes(new ArrayList<>(), "Jesus Juarez", "Ramirez", "En el mar", "83412345678", "2330192@upv.edu.mx", 49, "efnonasdbiusac2213123", "12sdaadeafniovion", 2);
 
     //todo: Cliente moral
+    public static Tarjeta tarjetaEmpresa = new TDebito("0987654321123456", Estado.Activo, 4321, TipoTarjeta.Debito, 0);
+
     public static CuentaBancaria cuentaEmpresa = new CuentaEmpresa("98765432", "2345678987654", Estado.Activo, new ArrayList<>(), new ArrayList<>(), BANAMEX, 1000000, "5432", 0, new ArrayList<>());
 
     public static ClienteMoral Discord = new ClienteMoral("Discord", "Cerca", "ewui23bui3bu21", cuentaEmpresa);

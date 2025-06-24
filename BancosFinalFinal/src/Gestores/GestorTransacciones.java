@@ -178,4 +178,11 @@ public class GestorTransacciones {
             System.out.println("Tu tarjeta no es de credito");
         }
     }
+
+    public void pagarDinero(){
+        Scanner sc = new Scanner(System.in);
+
+
+
+    }
 }

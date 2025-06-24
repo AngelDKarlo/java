@@ -157,7 +157,39 @@ public class MenuEmpleados {
     }
 
     public void menuCajero(){
+        Scanner sc = new Scanner(System.in);
+        String opcion;
+        int op;
 
+        do {
+            System.out.println("****************************");
+            System.out.println("Bienvenido cajero " + empleadoAcctual.getNombres() + " " + empleadoAcctual.getApellidos());
+            System.out.println("Que deseas hacer?");
+            System.out.println("1. Atender depositos");
+            System.out.println("2. Atender retiros");
+            System.out.println("3. ver Clientes");
+            System.out.println("4. Salir");
+            System.out.println("*******************************");
+            opcion = sc.nextLine();
+            op = Validaciones.validarTipoDatoInt(opcion);
+            switch (op){
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    GestorUsuarios.verCliente();
+                    break;
+                case 4:
+                    break;
+                case 0:
+                    System.out.println("No se aceptan caracteres");
+                    break;
+                default:
+                    System.out.println("Opcion incorrecta");
+                    break;
+            }
+        }while(op != 4);
     }
 
     public void menuAtencionAlCliente(){

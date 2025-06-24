@@ -27,7 +27,10 @@ public class MenuPrincipal {
         clientes.add(Jesus);
 
 
+        tarjetas3.add(tarjetaEmpresa);
+        cuentaEmpresa.setTarjetas(tarjetas3);
         empresas.add(Discord);
+
 
         empleados.add(gerente);
         empleados.add(subgerente);

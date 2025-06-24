@@ -3,6 +3,7 @@ package Auxiliares;
 import Principales.Clientes;
 import Principales.Historial;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static Auxiliares.ConstruccionDeCuentas.*;
@@ -16,8 +17,9 @@ public class GenerarHistorial {
         //Ver qué tipo de transaccion es y poner los datos correspondientes}
 
         id++;
+        LocalDate fecha = LocalDate.now();
 
-        Historial historial = new Historial(transaccion,monto,clienteActual,clienteRecibe,id);
+        Historial historial = new Historial(transaccion,monto,clienteActual,clienteRecibe,id, fecha);
         ArrayList<Historial> historialcliente = cuentaActual.getHistorial();
         historialcliente.add(historial);
 

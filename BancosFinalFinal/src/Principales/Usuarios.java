@@ -1,5 +1,7 @@
 package Principales;
 
+import java.time.LocalDate;
+
 public class Usuarios {
     private String nombres;
     private String apellidos;
