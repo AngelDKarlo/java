@@ -9,8 +9,9 @@ public class Usuarios {
     private int edad;
     private String CURP;
     private String RFC;
+    private int id;
 
-    public Usuarios(String nombres, String apellidos, String direccion, String telefono, String email, int edad,  String CURP, String RFC) {
+    public Usuarios(String nombres, String apellidos, String direccion, String telefono, String email, int edad,  String CURP, String RFC, int id) {
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.direccion = direccion;
@@ -19,6 +20,7 @@ public class Usuarios {
         this.edad = edad;
         this.CURP = CURP;
         this.RFC = RFC;
+        this.id = id;
     }
 
     //getters
@@ -46,6 +48,9 @@ public class Usuarios {
     public String getRFC() {
         return RFC;
     }
+    public int getId() {
+        return id;
+    }
 
     //Setters
     public void setNombres(String nombres) {
@@ -71,5 +76,8 @@ public class Usuarios {
     }
     public void setRFC(String RFC) {
         this.RFC = RFC;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
 }
