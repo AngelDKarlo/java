@@ -14,8 +14,8 @@ public class CuentaInversion extends CuentaBancaria {
     private ArrayList<Inversion> InversionesActuales;
     private HiloInversion hiloInversion;
 
-    public CuentaInversion(String numeroCuenta, String claveInterbancaria, Estado Estado,  ArrayList<Historial> historial, Bancos bancos, double saldo, String CLAVE, int intentos, ArrayList<Inversion> InversionesActuales) {
-        super(numeroCuenta, claveInterbancaria, Estado, TipoCuenta.Inversion,  historial,null, bancos, saldo, CLAVE, intentos);
+    public CuentaInversion(String numeroCuenta, String claveInterbancaria, Estado Estado,  ArrayList<Historial> historial, double saldo, String CLAVE, int intentos, ArrayList<Inversion> InversionesActuales) {
+        super(numeroCuenta, claveInterbancaria, Estado, TipoCuenta.Inversion,  historial,null, saldo, CLAVE, intentos);
         this.InversionesActuales = InversionesActuales;
 
         hiloInversion = new HiloInversion(InversionesActuales);

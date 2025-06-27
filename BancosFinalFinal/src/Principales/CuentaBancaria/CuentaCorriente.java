@@ -10,8 +10,8 @@ import Principales.TipoTarjetas.Tarjeta;
 import java.util.ArrayList;
 
 public class CuentaCorriente extends CuentaBancaria {
-    public CuentaCorriente(String numeroCuenta, String claveInterbancaria, Estado estado, ArrayList<Historial> historial, ArrayList<Tarjeta> tarjetas, Bancos bancos, double saldo, String clave, int intentos) {
-        super(numeroCuenta, claveInterbancaria, estado, TipoCuenta.Corriente, historial, tarjetas, bancos, saldo, clave,  intentos);
+    public CuentaCorriente(String numeroCuenta, String claveInterbancaria, Estado estado, ArrayList<Historial> historial, ArrayList<Tarjeta> tarjetas, double saldo, String clave, int intentos) {
+        super(numeroCuenta, claveInterbancaria, estado, TipoCuenta.Corriente, historial, tarjetas, saldo, clave,  intentos);
     }
 
 

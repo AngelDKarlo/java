@@ -50,6 +50,32 @@ public class Validaciones {
         return esValido;
     }
 
+    public static void validarNipCuenta(){
+        Scanner sc = new Scanner(System.in);
+        int j=0;
+        int i=3;
+        do{
+            System.out.println("Cual es tu Pin?");
+            String pin = sc.nextLine();
+
+            if(cuentaActual.getCLAVE().equals(pin)){
+                return;
+            }
+            else{
+                if (cuentaActual.getIntentos() == 3){
+                    System.out.println("Tu cuenta se ha bloqueado");
+                    cuentaActual.setEstado(Estado.Bloqueado);
+                    break;
+                }
+                else{
+                    System.out.println("Te quedan " + i--  + " intentos");
+                    j++;
+                    cuentaActual.setIntentos(j);
+                }
+            }
+        }while (true);
+    }
+
     public static void validarTarjetaActual(){
         Scanner sc = new Scanner(System.in);
 
@@ -64,7 +90,7 @@ public class Validaciones {
             int pin = sc.nextInt();
             sc.nextLine();
 
-            for (Clientes c : clientes) {
+            for (Clientes c : bancoActual.getClientes()) {
                 for(CuentaBancaria cu : c.getCuentaBancaria()){
                     for(Tarjeta tarjeta : cu.getTarjetas() ){
                         if (tarjeta.getNumeroTarjeta().equals(numTarjeta) &&  tarjeta.getPin() == pin && cuentaActual.getTarjetas().contains(tarjeta)){
@@ -95,7 +121,7 @@ public class Validaciones {
             if (tarjetaActual == null) {
                 System.out.println("Número de Tarjeta o PIN incorrectos.");
             }if (tarjetaActual.getEstado() == Estado.Bloqueado){
-                break;
+                break ciclo;
             }
         }while (true);
     }
@@ -128,42 +154,35 @@ public class Validaciones {
             int pin = sc.nextInt();
             sc.nextLine();
 
-            for(ClienteMoral clienteMoral : empresas){
-
-            }
-
-            for (Clientes c : clientes) {
-                for(CuentaBancaria cu : c.getCuentaBancaria()){
-                    for(Tarjeta tarjeta : cu.getTarjetas() ){
-                        if (tarjeta.getNumeroTarjeta().equals(numTarjeta) &&  tarjeta.getPin() == pin && cuentaActual.getTarjetas().contains(tarjeta)){
-                            tarjetaActual = tarjeta;
-                            System.out.println("Numero de Tarjeta: " +  tarjetaActual.getNumeroTarjeta());
-                            System.out.println("Clave interbancaria: " +  cuentaActual.getClaveInterbancaria());
+            for(ClienteMoral clienteMoral : bancoActual.getClientesMorales()) {
+                for (Tarjeta tarjeta : clienteMoral.getCuentaBancaria().getTarjetas()) {
+                    if (tarjeta.getNumeroTarjeta().equals(numTarjeta) && tarjeta.getPin() == pin && cuentaActual.getTarjetas().contains(tarjeta)) {
+                        tarjetaActual = tarjeta;
+                        System.out.println("Numero de Tarjeta: " + tarjetaActual.getNumeroTarjeta());
+                        System.out.println("Clave interbancaria: " + cuentaActual.getClaveInterbancaria());
+                        break ciclo;
+                    } else if (tarjeta.getNumeroTarjeta().equals(numTarjeta) && tarjeta.getPin() != pin && cuentaActual.getTarjetas().contains(tarjeta)) {
+                        tarjetaActual = tarjeta;
+                        if (tarjetaActual.getIntentos() == 3) {
+                            System.out.println("Tu cuenta se ha bloqueado");
+                            tarjetaActual.setEstado(Estado.Bloqueado);
                             break ciclo;
+                        } else {
+                            System.out.println("Te quedan " + i-- + " intentos");
+                            j++;
+                            tarjetaActual.setIntentos(j);
                         }
-                        else if(tarjeta.getNumeroTarjeta().equals(numTarjeta) && tarjeta.getPin() != pin && cuentaActual.getTarjetas().contains(tarjeta)){
-                            tarjetaActual = tarjeta;
-                            if (tarjetaActual.getIntentos() == 3){
-                                System.out.println("Tu cuenta se ha bloqueado");
-                                tarjetaActual.setEstado(Estado.Bloqueado);
-                                break ciclo;
-                            }
-                            else{
-                                System.out.println("Te quedan " + i--  + " intentos");
-                                j++;
-                                tarjetaActual.setIntentos(j);
-                            }
-                        }
-                        else{
-                            tarjetaActual = null;
-                        }
+                    } else {
+                        tarjetaActual = null;
                     }
                 }
             }
+
+
             if (tarjetaActual == null) {
                 System.out.println("Número de Tarjeta o PIN incorrectos.");
-            }if (tarjetaActual.getEstado() == Estado.Bloqueado){
-                break;
+            }else if (tarjetaActual.getEstado() == Estado.Bloqueado){
+                break ciclo;
             }
         }while (true);
     }

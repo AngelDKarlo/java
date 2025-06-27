@@ -1,6 +1,6 @@
 package Auxiliares;
 
-import Principales.Clientes;
+
 import Principales.Historial;
 
 import java.time.LocalDate;
@@ -25,7 +25,6 @@ public class GenerarHistorial {
 
         System.out.println("******************Folio***********************");
         System.out.println("Nombre: " + clienteActual.getNombres());
-        System.out.println("Banco: " + cuentaActual.getBancos().getNombreBanco());
         if(tarjetaActual != null){
             System.out.println("Numero de Tarjeta: " + tarjetaActual.getNumeroTarjeta());
         }

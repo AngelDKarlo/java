@@ -15,21 +15,21 @@ public abstract class CuentaBancaria {
     private TipoCuenta tipoCuentaBancaria;
     private ArrayList<Historial> historial;
     private ArrayList<Tarjeta> tarjetas;
-    private Bancos bancos;
     private Double saldo;
     private String CLAVE;
     private int intentos;
 
-    public CuentaBancaria(String numeroCuenta, String claveInterbancaria, Estado Estado, TipoCuenta tipoCuentaBancaria,  ArrayList<Historial> historial,  ArrayList<Tarjeta> tarjetas,  Bancos bancos, double saldo,  String CLAVE, int intentos) {
+    public CuentaBancaria(String numeroCuenta, String claveInterbancaria, Estado Estado, TipoCuenta tipoCuentaBancaria,  ArrayList<Historial> historial,  ArrayList<Tarjeta> tarjetas, double saldo,  String CLAVE, int intentos) {
         this.numeroCuenta = numeroCuenta;
         this.claveInterbancaria = claveInterbancaria;
         this.Estado = Estado;
+        this.tipoCuentaBancaria = tipoCuentaBancaria;
         this.historial = historial;
         this.tarjetas = tarjetas;
-        this.bancos = bancos;
         this.saldo = saldo;
         this.CLAVE = CLAVE;
         this.intentos = intentos;
+
     }
 
     public abstract void mostrarMenu();
@@ -52,9 +52,6 @@ public abstract class CuentaBancaria {
     }
     public ArrayList<Tarjeta> getTarjetas() {
         return tarjetas;
-    }
-    public Bancos getBancos() {
-        return bancos;
     }
     public Double getSaldo() {
         return saldo;
@@ -84,9 +81,6 @@ public abstract class CuentaBancaria {
     }
     public void setTarjetas(ArrayList<Tarjeta> tarjetas) {
         this.tarjetas = tarjetas;
-    }
-    public void setBancos(Bancos bancos) {
-        this.bancos = bancos;
     }
     public void setSaldo(Double saldo) {
         this.saldo = saldo;

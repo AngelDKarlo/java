@@ -4,7 +4,6 @@ import Auxiliares.Enums.Estado;
 import Auxiliares.Validaciones;
 import Principales.ClienteMoral;
 import Principales.Clientes;
-import Principales.CuentaBancaria.CuentaBancaria;
 
 import static Auxiliares.ConstruccionDeCuentas.*;
 
@@ -20,13 +19,13 @@ public class MenuClientes {
         int op;
         int i = 3;
         int j = 0;
+        boolean res = false;
 
         do{
             System.out.println("***********************************");
             System.out.println("Inicio de Sesion");
             System.out.println("1- iniciar Sesion");
             System.out.println("2- Registrarse");
-            System.out.println("3- Ir a atencion al cliente");
             System.out.println("3- Salir");
             System.out.println("***********************************");
             opcion = sc.nextLine();
@@ -34,105 +33,101 @@ public class MenuClientes {
             switch (op){
                 case 1:
                     ciclo:
-                    do{
-                        System.out.println("Eres una empresa? (si,no)");
-                        String respuesta = sc.nextLine();
-                        boolean res;
-                        if(respuesta.equals("si")){
-                            res = true;
-                        }
-                        else {
-                            res = false;
-                        }
-                        System.out.println("Numero de cuenta:");
-                        String cuenta = sc.nextLine();
-                        System.out.println("Pin: ");
-                        String pin = sc.nextLine();
-
-                        if(!res){
-                            buscarCuentas:
-                            for (Clientes c : clientes) {
-                                for(CuentaBancaria cu : c.getCuentaBancaria()){
-                                    if(cuenta.equals(cu.getNumeroCuenta()) && pin.equals(cu.getCLAVE())){
+                    do {
+                        System.out.println("**********************");
+                        System.out.println("1- Cliente normal");
+                        System.out.println("2- Cliente moral");
+                        System.out.println("3- volver");
+                        System.out.println("**************************");
+                        opcion = sc.nextLine();
+                        op = Validaciones.validarTipoDatoInt(opcion);
+                        if (op == 3) {
+                            break;
+                        } else {
+                            if (op == 2) {
+                                res = true;
+                            }
+                            System.out.println("Usuario:");
+                            String usuario = sc.nextLine();
+                            System.out.println("Contraseña: ");
+                            String contrasenia = sc.nextLine();
+                            if (!res) {
+                                buscarCuentas:
+                                for (Clientes c : bancoActual.getClientes()){
+                                    if (c.getUsuario().equals(usuario) && c.getContrasena().equals(contrasenia)){
                                         clienteActual = c;
-                                        cuentaActual = cu;
-                                        if(cuentaActual.getEstado() == Estado.Bloqueado){
-                                            System.out.println("Tu cuenta esta bloqueada");
-                                            break buscarCuentas;
+                                        for (int k = 0; k < clienteActual.getCuentaBancaria().size(); k++){
+                                            System.out.println(k + " " + clienteActual.getCuentaBancaria().get(k).getTipoCuentaBancaria());
                                         }
-                                        else{
+                                        System.out.println("Que cuentas vas a usar?");
+                                        opcion = sc.nextLine();
+                                        op = Validaciones.validarTipoDatoInt(opcion);
+                                        if(clienteActual.getCuentaBancaria().size() > op){
+                                            cuentaActual =  clienteActual.getCuentaBancaria().get(op);
+                                            Validaciones.validarNipCuenta();
+                                            if (cuentaActual.getEstado() == Estado.Bloqueado) {
+                                                System.out.println("Tu cuenta esta bloqueada");
+                                                break buscarCuentas;
+                                            } else {
+                                                cuentaActual.mostrarMenu();
+                                                break ciclo;
+                                            }
+                                        }else if (usuario.equals(c.getUsuario()) && !contrasenia.equals(c.getContrasena())) {
+                                            cuentaActual = clienteActual.getCuentaBancaria().get(op);
+                                            if (cuentaActual.getIntentos() == 3) {
+                                                System.out.println("Tu cuenta se ha bloqueado");
+                                                cuentaActual.setEstado(Estado.Bloqueado);
+                                                break buscarCuentas;
+                                            } else {
+                                                System.out.println("Te quedan " + i-- + " intentos");
+                                                j++;
+                                                cuentaActual.setIntentos(j);
+                                            }
+                                        } else {
+                                            cuentaActual = null;
+                                        }
+                                    }
+                                }
+                            } else if (res) {
+                                for (ClienteMoral c : bancoActual.getClientesMorales()) {
+                                    if (c.getUsuario().equals(usuario) && c.getContrasenia().equals(contrasenia)) {
+                                        clienteMoralActual = c;
+                                        cuentaActual = c.getCuentaBancaria();
+                                        if (cuentaActual.getEstado() == Estado.Bloqueado) {
+                                            System.out.println("Tu cuenta esta bloqueada");
+                                            break;
+                                        } else {
                                             cuentaActual.mostrarMenu();
                                             break ciclo;
                                         }
-                                    }
-                                    else if(cuenta.equals(cu.getNumeroCuenta()) && !pin.equals(cu.getCLAVE())){
-                                        cuentaActual = cu;
-                                        if (cuentaActual.getIntentos() == 3){
+                                    } else if (c.getUsuario().equals(usuario) && !c.getContrasenia().equals(contrasenia)) {
+                                        cuentaActual = c.getCuentaBancaria();
+                                        if (cuentaActual.getIntentos() == 3) {
                                             System.out.println("Tu cuenta se ha bloqueado");
                                             cuentaActual.setEstado(Estado.Bloqueado);
-                                            break buscarCuentas;
-                                        }
-                                        else{
-                                            System.out.println("Te quedan " + i--  + " intentos");
+                                            break;
+                                        } else {
+                                            System.out.println("Te quedan " + i-- + " intentos");
                                             j++;
                                             cuentaActual.setIntentos(j);
                                         }
-                                    }
-                                    else{
+                                    } else {
                                         cuentaActual = null;
                                     }
                                 }
-                            }
-                            if (cuentaActual == null) {
-                                System.out.println("Número de cuenta o PIN incorrectos.");
-                            }if (cuentaActual != null && cuentaActual.getEstado() == Estado.Bloqueado){
-                                break;
-                            }
-                        }
-                        else if(res){
-                            for (ClienteMoral c : empresas) {
-                                if(c.getCuentaBancaria().getNumeroCuenta().equals(cuenta) && c.getCuentaBancaria().getCLAVE().equals(pin)){
-                                    clienteMoralActual = c;
-                                    cuentaActual = c.getCuentaBancaria();
-                                    if(cuentaActual.getEstado() == Estado.Bloqueado){
-                                        System.out.println("Tu cuenta esta bloqueada");
-                                        break;
-                                    }
-                                    else{
-                                        cuentaActual.mostrarMenu();
-                                        break ciclo;
-                                    }
+                                if (cuentaActual == null) {
+                                    System.out.println("Número de cuenta o PIN incorrectos.");
                                 }
-                                else if(cuenta.equals(c.getCuentaBancaria().getNumeroCuenta()) && !pin.equals(c.getCuentaBancaria().getCLAVE())){
-                                    cuentaActual = c.getCuentaBancaria();
-                                    if (cuentaActual.getIntentos() == 3){
-                                        System.out.println("Tu cuenta se ha bloqueado");
-                                        cuentaActual.setEstado(Estado.Bloqueado);
-                                        break;
-                                    }
-                                    else{
-                                        System.out.println("Te quedan " + i--  + " intentos");
-                                        j++;
-                                        cuentaActual.setIntentos(j);
-                                    }
+                                if (cuentaActual != null && cuentaActual.getEstado() == Estado.Bloqueado) {
+                                    break;
                                 }
-                                else{
-                                    cuentaActual = null;
-                                }
-                            }
-                            if (cuentaActual == null) {
-                                System.out.println("Número de cuenta o PIN incorrectos.");
-                            }if (cuentaActual != null && cuentaActual.getEstado() == Estado.Bloqueado){
-                                break;
                             }
                         }
                     }while (true);
-                    break;
                 case 2:
+
                     break;
                 case 3:
-                    break;
-                case 4:
                     break;
                 default:
                     System.out.println("Opcion incorrecta");

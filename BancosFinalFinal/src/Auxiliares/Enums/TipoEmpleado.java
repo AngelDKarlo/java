@@ -4,5 +4,6 @@ public enum TipoEmpleado {
     cajero,
     gerente,
     subGerente,
-    atencionAlCliente
+    atencionAlCliente;
+
 }

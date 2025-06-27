@@ -1,8 +1,13 @@
 package Menus;
 
+import Auxiliares.Enums.Estado;
 import Auxiliares.Validaciones;
 
+import Gestores.GestorCredito;
+import Gestores.GestorTransacciones;
 import Gestores.GestorUsuarios;
+import Principales.Clientes;
+import Principales.CuentaBancaria.CuentaBancaria;
 import Principales.Empleados.Empleados;
 
 import java.util.Scanner;
@@ -33,7 +38,7 @@ public class MenuEmpleados {
                         System.out.println("Contraseña: ");
                         String pin = sc.nextLine();
 
-                        for (Empleados c : empleados) {
+                        for (Empleados c : bancoActual.getEmpleados()) {
                             if(cuenta.equals(c.getUsuario()) && pin.equals(c.getContrasena())){
                                 empleadoAcctual = c;
                                 empleadoAcctual.mostrarMenu();
@@ -76,7 +81,8 @@ public class MenuEmpleados {
             System.out.println("5. Eliminar cliente");
             System.out.println("6. ver Empleados");
             System.out.println("7. ver Clientes");
-            System.out.println("8. Salir");
+            System.out.println("8. Ver creditos");
+            System.out.println("9. Salir");
             System.out.println("*******************************");
             opcion = sc.nextLine();
             op = Validaciones.validarTipoDatoInt(opcion);
@@ -103,6 +109,9 @@ public class MenuEmpleados {
                     GestorUsuarios.verCliente();
                     break;
                 case 8:
+                    GestorCredito.getInstance().verCreditos();
+                    break;
+                case 9:
                     break;
                 case 0:
                     System.out.println("No se aceptan caracteres");
@@ -111,7 +120,7 @@ public class MenuEmpleados {
                     System.out.println("Opcion incorrecta");
                     break;
             }
-        }while(op != 8);
+        }while(op != 9);
     }
 
     public void menuSubGerente(){
@@ -121,7 +130,7 @@ public class MenuEmpleados {
 
         do {
             System.out.println("****************************");
-            System.out.println("Bienvenido gerente " + empleadoAcctual.getNombres() + " " + empleadoAcctual.getApellidos());
+            System.out.println("Bienvenido subgerente " + empleadoAcctual.getNombres() + " " + empleadoAcctual.getApellidos());
             System.out.println("Que deseas hacer?");
             System.out.println("1. Agregar Cliente");
             System.out.println("2. Eliminar cuenta de Cliente");
@@ -161,24 +170,61 @@ public class MenuEmpleados {
         String opcion;
         int op;
 
+
+        Validaciones.validarTarjetaActual();
+
+        if(tarjetaActual == null){
+            System.out.println("Tarjeta no existente");
+            return;
+        }
+
+        if(tarjetaActual.getEstado() != Estado.Activo){
+            System.out.println("Tu tarjeta esta bloqueada o inactiva por mucho tiempo");
+            return;
+        }
+
+
+        boolean encontrado = false;
+        for (Clientes c : bancoActual.getClientes()){
+            for (CuentaBancaria cu : c.getCuentaBancaria()){
+                if(cu.getTarjetas().contains(tarjetaActual)){
+                    clienteActual = c;
+                    cuentaActual = cu;
+                    encontrado = true;
+                }
+             }
+            if(encontrado){break;}
+        }
+
+        if(!encontrado){
+            System.out.println("No se encontro cuenta asiociada");
+            return;
+        }
+
         do {
-            System.out.println("****************************");
-            System.out.println("Bienvenido cajero " + empleadoAcctual.getNombres() + " " + empleadoAcctual.getApellidos());
+            System.out.println("**************************");
+            System.out.println("Numero de tarjeta: " +  tarjetaActual.getNumeroTarjeta());
+            System.out.println("Saldo: " +  cuentaActual.getSaldo());
             System.out.println("Que deseas hacer?");
-            System.out.println("1. Atender depositos");
-            System.out.println("2. Atender retiros");
-            System.out.println("3. ver Clientes");
+            System.out.println("1. Retirar dinero");
+            System.out.println("2. Ver Historial");
+            System.out.println("3. Donar");
             System.out.println("4. Salir");
-            System.out.println("*******************************");
+            System.out.println("*****************************");
             opcion = sc.nextLine();
             op = Validaciones.validarTipoDatoInt(opcion);
             switch (op){
                 case 1:
+                    GestorTransacciones.retirarCajero();
                     break;
                 case 2:
+                    System.out.println(cuentaActual.getHistorial());
                     break;
                 case 3:
-                    GestorUsuarios.verCliente();
+                    System.out.println("Cuanto vas a donar");
+                    String don = sc.nextLine();
+                    double donacion = Validaciones.validarTipoDatoDouble(don);
+                    cuentaActual.setSaldo(cuentaActual.getSaldo() - donacion);
                     break;
                 case 4:
                     break;
@@ -190,6 +236,7 @@ public class MenuEmpleados {
                     break;
             }
         }while(op != 4);
+
     }
 
     public void menuAtencionAlCliente(){

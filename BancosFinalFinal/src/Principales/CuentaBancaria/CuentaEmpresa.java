@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class CuentaEmpresa extends CuentaBancaria{
     private ArrayList<CuentaBancaria> cuentasEmpleados;
 
-    public CuentaEmpresa(String numeroCuenta, String claveInterbancaria, Estado estado, ArrayList<Historial> historial, ArrayList<Tarjeta> tarjetas, Bancos bancos, double saldo, String clave, int intentos,ArrayList<CuentaBancaria>  cuentasEmpleados) {
-        super(numeroCuenta, claveInterbancaria, estado, TipoCuenta.Empresa, historial, tarjetas, bancos, saldo, clave,  intentos);
+    public CuentaEmpresa(String numeroCuenta, String claveInterbancaria, Estado estado, ArrayList<Historial> historial, ArrayList<Tarjeta> tarjetas, double saldo, String clave, int intentos,ArrayList<CuentaBancaria>  cuentasEmpleados) {
+        super(numeroCuenta, claveInterbancaria, estado, TipoCuenta.Empresa, historial, tarjetas, saldo, clave,  intentos);
         this.cuentasEmpleados = cuentasEmpleados;
     }
 

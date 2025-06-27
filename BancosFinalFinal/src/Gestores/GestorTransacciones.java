@@ -2,14 +2,19 @@ package Gestores;
 
 import Auxiliares.Enums.Estado;
 import Auxiliares.Enums.EstadoTarjeta;
+import Auxiliares.Enums.TipoCuenta;
 import Auxiliares.GenerarHistorial;
+import Auxiliares.PeticionCredito;
 import Auxiliares.Validaciones;
 import Principales.Clientes;
 import Principales.CuentaBancaria.CuentaBancaria;
+import Principales.CuentaBancaria.CuentaEmpresa;
 import Principales.CuentaBancaria.CuentaInversion;
 import Principales.TipoTarjetas.TCredito;
 
+import java.time.LocalDateTime;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 import static Auxiliares.ConstruccionDeCuentas.*;
 import static Auxiliares.ConstruccionDeCuentas.clienteRecibe;
@@ -83,6 +88,38 @@ public class GestorTransacciones {
         }
     }
 
+    public static void retirarCajero(){
+        String m;
+        double monto;
+        boolean esValido;
+        String transaccion;
+        Scanner sc = new Scanner(System.in);
+
+        if(tarjetaActual.getEstado() == Estado.Bloqueado){
+            System.out.println("Tu tajerta esta bloqueada");
+        }
+        else{
+            do{
+                System.out.println("Cuanto dinero deseas retirar?");
+                m = sc.nextLine();
+                monto = Validaciones.validarTipoDatoDouble(m);
+                if(monto == 0){
+                    System.out.println("No se aceptan caracteres");
+                    break;
+                }
+                else {
+                    esValido = Validaciones.validarMonto(monto);
+                    if(esValido){
+                        cuentaActual.setSaldo(cuentaActual.getSaldo() - monto);
+                        transaccion = "Retirar";
+                        GenerarHistorial.darFolio(transaccion,monto);
+                        break;
+                    }
+                }
+            }while(true);
+        }
+    }
+
     public static void transferencia(){
         String m;
         double monto;
@@ -108,9 +145,9 @@ public class GestorTransacciones {
                 System.out.println("Banco al que esta aciciado: ");
                 String banco =  sc.nextLine();
                 buscarCuentas:
-                for (Clientes c : clientes) {
-                    for (CuentaBancaria cu : c.getCuentaBancaria()) {
-                        if (cuentades.equals(cu.getNumeroCuenta()) && banco.equals(cu.getBancos().getNombreBanco())) {
+                for (Clientes c : bancoActual.getClientes()){
+                    for (CuentaBancaria cu : c.getCuentaBancaria()){
+                        if (cuentades.equals(cu.getNumeroCuenta())) {
                             clienteRecibe = c;
                             cuentaRecibe = cu;
                             if (cuentaRecibe.getEstado() == Estado.Bloqueado) {
@@ -128,12 +165,8 @@ public class GestorTransacciones {
                                     if(esValido){
                                         cuentaActual.setSaldo(cuentaActual.getSaldo() - monto);
                                         cuentaRecibe.setSaldo(cuentaRecibe.getSaldo() + monto);
-                                        if(cuentaRecibe.getBancos().getNombreBanco().equals(cuentaActual.getBancos().getNombreBanco())){
-                                            transaccion = "Transferencia";
-                                        }
-                                        else{
-                                            transaccion = "Transferencia Interbancaria";
-                                        }
+                                        transaccion = "Transferencia Interbancaria";
+
                                         GenerarHistorial.darFolio(transaccion,monto);
                                         break ciclo;
                                     }
@@ -144,6 +177,7 @@ public class GestorTransacciones {
                         else {
                             cuentaRecibe = null;
                         }
+//                    }
                     }
                 }
             }while (true);
@@ -162,13 +196,16 @@ public class GestorTransacciones {
             String m = sc.nextLine();
             double monto =  Validaciones.validarTipoDatoDouble(m);
 
-            if((credito.getDineroPagado() + monto) >= credito.getLimite()){
+            if((credito.getDineroPagado() + monto) > credito.getLimite()){
                 System.out.println("El dinero que pides es superior a tu limite");
             }
             else if(monto > 0 && monto < credito.getLimite()){
-                cuentaActual.setSaldo(cuentaActual.getSaldo() + monto);
+
                 credito.setEstadoT(EstadoTarjeta.EnProceso);
-                //Aqui se mete el codigo para mandar la solicitud al gerente o subgerente respectivamente
+                LocalDateTime localDateTime = LocalDateTime.now();
+
+                PeticionCredito peticionCredito = new PeticionCredito(clienteActual, tarjetaActual, monto ,localDateTime);
+                GestorCredito.getInstance().agregarPeticionCredito(peticionCredito);
             }
             else if (monto == 0){
                 System.out.println("dinero invalido");
@@ -179,10 +216,86 @@ public class GestorTransacciones {
         }
     }
 
-    public void pagarDinero(){
+    public static void pagarDinero(){
         Scanner sc = new Scanner(System.in);
+        double deuda;
 
+        Validaciones.validarTarjetaEmpresa();
+        if(tarjetaActual.getEstado() == Estado.Bloqueado){
+            return;
+        }
+        do{
+            System.out.println("cuanto es el sueldo de los empleados:");
+            deuda = Validaciones.validarTipoDatoDouble(sc.nextLine());
 
+            if(deuda == 0){
+                System.out.println("No se aceptan caracteres");
+                continue;
+            }
 
+            if(cuentaActual instanceof CuentaEmpresa cuentaEmpresa) {
+                ArrayList<Clientes> empleados = clienteMoralActual.getEmpleados();
+
+                if(empleados.isEmpty()) {
+                    System.out.println("No hay empleados en la empresa");
+                    return;
+                }
+
+                double total = deuda * empleados.size();
+
+                if(cuentaEmpresa.getSaldo() < total) {
+                    System.out.println("Saldo insuficient");
+                    continue;
+                }
+                realizarPagoEmpleados(cuentaEmpresa, empleados, deuda, total);
+
+            } else {
+                System.out.println("Esta función solo está disponible para cuentas de empresa");
+                return;
+            }
+        } while (true);
+    }
+
+    public static void realizarPagoEmpleados(CuentaEmpresa cuentaEmpresa, ArrayList<Clientes> empleados, double monto, double total) {
+
+        int empleadosPagados = 0;
+
+        for(Clientes empleado : empleados) {
+            for(Clientes clienteBanco : bancoActual.getClientes()) {
+                if(clienteBanco.getId() == empleado.getId()) {
+
+                    CuentaBancaria cuentaEmpleado = null;
+                    for(CuentaBancaria cuenta : clienteBanco.getCuentaBancaria()) {
+                        if(cuenta.getEstado() == Estado.Activo && cuenta.getTipoCuentaBancaria() == TipoCuenta.Nomina) {
+                            cuentaEmpleado = cuenta;
+                            break;
+                        }
+                    }
+
+                    if(cuentaEmpleado != null) {
+                        cuentaEmpleado.setSaldo(cuentaEmpleado.getSaldo() + monto);
+                        empleadosPagados++;
+
+                        Clientes clienteAnterior = clienteActual;
+                        CuentaBancaria cuentaAnterior = cuentaActual;
+
+                        clienteActual = clienteBanco;
+                        cuentaActual = cuentaEmpleado;
+
+                        GenerarHistorial.darFolio("Pago de nómina", monto);
+
+                        clienteActual = clienteAnterior;
+                        cuentaActual = cuentaAnterior;
+
+                    }
+                    break;
+                }
+            }
+        }
+
+        double totalDescontado = empleadosPagados * monto;
+        cuentaEmpresa.setSaldo(cuentaEmpresa.getSaldo() - totalDescontado);
+
+        GenerarHistorial.darFolio("Pago de nómina a empleados", totalDescontado);
     }
 }

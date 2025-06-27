@@ -35,8 +35,10 @@ public class HiloInversion extends Thread {
                             continue;
                         }
                         else {
-                            if (!corriendo) break;
-                            GestorInverciones.calcularInversiones(inversion);
+                            synchronized (inversion){
+                                if (!corriendo) break;
+                                GestorInverciones.calcularInversiones(inversion);
+                            }
                         }
                     }
                 }

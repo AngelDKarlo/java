@@ -62,7 +62,7 @@ public class Historial {
         String formato = "***************************************\n" + "ID Transacción: %d\n" + "Tipo: %s\n" +  "Monto: $%.6f\n" +  "Cliente: %s %s\n" + "Fecha: %s\n";
         if (cliente2 != null) {
             formato += "Destinatario: %s %s\n";
-            return String.format(formato + "***************************************\n", id, transaccion, dinero, cliente1.getNombres(), cliente1.getApellidos(), cliente2.getNombres(), cliente2.getApellidos());
+            return String.format(formato + "***************************************\n", id, transaccion, dinero, cliente1.getNombres(), cliente1.getApellidos(), fecha,  cliente2.getNombres(), cliente2.getApellidos());
         } else {
             return String.format(formato + "***************************************\n", id, transaccion, dinero, cliente1.getNombres(), cliente1.getApellidos(), fecha);
         }
